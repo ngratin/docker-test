@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-ARG TEST_VALUE
+ARG TEST_VALUE=7.0
 
 RUN apt-get update
 RUN apt-get install -y apache2
