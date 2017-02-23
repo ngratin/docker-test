@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "-----------"
+echo "hello ngratin"
+echo ${IMAGE_NAME}
+echo "-----------"
+
+MY_REPO=`echo ${IMAGE_NAME} | cut -d":" -f1`
+
+echo "-----------"
+echo "hello ngratin2"
+echo ${MY_REPO}
+printenv
+echo "-----------"
+
+
+
+PHP_VERSION=7.0
+docker build --build-arg TEST_VALUE=${PHP_VERSION} -t ${MY_REPO}:${PHP_VERSION} .
+
+PHP_VERSION=7.1
+docker build --build-arg TEST_VALUE=${PHP_VERSION} -t ${MY_REPO}:${PHP_VERSION} .
+
