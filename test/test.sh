@@ -10,9 +10,10 @@ echo "ADD code /srv/code" >> Dockerfile.${PHP_VERSION}
 docker build -t ci/base:${PHP_VERSION} -f ../${PHP_VERSION}/Dockerfile ../${PHP_VERSION}
 docker build -t ci/test:${PHP_VERSION} -f Dockerfile.${PHP_VERSION} .
 
-CID=`docker run -d -p 8123:80 ci/test:${PHP_VERSION}`
+CID=`docker run -d -p 80:80 ci/test:${PHP_VERSION}`
+sleep 15
 
-curl -vf localhost:8123
+curl -vf localhost
 
 docker stop $CID
 
