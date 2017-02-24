@@ -11,5 +11,6 @@ test:
     - test/testorg.sh 7.1
 deployment:
   release:
+    branch: master
     commands:
       - test/push_image_to_hub.sh
