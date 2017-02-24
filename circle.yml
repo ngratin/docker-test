@@ -1,0 +1,15 @@
+machine:
+  services:
+    - docker
+dependencies:
+  pre:
+    - docker info
+    - test/clone_samplecode.sh
+test:
+  override:
+    - test/testorg.sh 7.0
+    - test/testorg.sh 7.1
+deployment:
+  release:
+    commands:
+      - test/push_image_to_hub.sh
