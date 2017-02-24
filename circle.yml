@@ -7,7 +7,7 @@ dependencies:
     - test/clone_samplecode.sh
 test:
   override:
-    - test/test.sh 7.0
+    - test/test.sh 7.00
     - test/test.sh 7.1
 deployment:
   release:
