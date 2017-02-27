@@ -7,6 +7,7 @@ RUN apt-get install -y apache2
 RUN touch /$TEST_VALUE-test
 
 COPY conf/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY script/a /
 
 EXPOSE 80
 

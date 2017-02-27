@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "pre test"
+printenv
+cp -a ../conf .
+echo "pre test2"
+cp -a ../script .
+echo "pre test3"
