@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get install -y apache2
 RUN touch /$TEST_VALUE-test
 
-COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY conf/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 
