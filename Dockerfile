@@ -39,7 +39,6 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY run.sh /run.sh
 RUN chmod 755 /run.sh
 
-COPY config /config
 
 
 EXPOSE 80
