@@ -35,8 +35,6 @@ RUN a2enmod rewrite
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN mkdir -p /var/log/supervisor
-RUN touch /var/log/supervisor/supervisord.log
 
 COPY run.sh /run.sh
 RUN chmod 755 /run.sh
