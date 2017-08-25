@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
+set -e
 
-CODE_BRANCH=python2
-
-git clone https://github.com/mobingilabs/default-site-django.git -b ${CODE_BRANCH} code
+git clone https://github.com/mobingilabs/default-site-php test/code
