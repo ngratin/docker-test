@@ -1,65 +1,42 @@
-FROM ubuntu:16.04
+FROM ubuntu:14.04
+MAINTAINER david.siaw@mobingi.com
 
-LABEL maintainer="mobingi,Inc."
+RUN apt-get update
+RUN apt-get install -y supervisor
+RUN mkdir -p /var/log/supervisor
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		nginx \
-		software-properties-common \
-		supervisor \
-	&& apt-get clean \
-	&& rm -fr /var/lib/apt/lists/*
+RUN mkdir -p /var/run/sshd
 
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
+RUN apt-get install -y nginx
+# nginx config
+RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf
+RUN sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		php5.6 \
-		php5.6-cli \
-		php5.6-curl \
-		php5.6-dev \
-		php5.6-fpm \
-		php5.6-gd \
-		php5.6-imap \
-		php5.6-mbstring \
-		php5.6-mcrypt \
-		php5.6-mysql \
-		php5.6-pgsql \
-		php5.6-pspell \
-		php5.6-xml \
-		php5.6-xmlrpc \
-		php-apcu \
-		php-memcached \
-		php-pear \
-		php-redis \
-	&& apt-get clean \
-	&& rm -fr /var/lib/apt/lists/*
+RUN apt-get install -y software-properties-common python-software-properties
+RUN LANG=C.UTF-8 add-apt-repository ppa:ondrej/php5-5.6
+RUN apt-get update
+RUN apt-get install -y php5-fpm php5-cli php5-dev php5-mysql php5-xmlrpc php5-curl php5-gd php-apc php-pear php5-imap php5-mcrypt php5-pspell
+# php-fpm config
+RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php5/fpm/php.ini
+RUN sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" /etc/php5/fpm/php.ini
+RUN sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" /etc/php5/fpm/php.ini
+RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.conf
+RUN sed -i -e "s/;clear_env\s*=\s*yes/clear_env = no/g" /etc/php5/fpm/php-fpm.conf
+RUN sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php5/fpm/pool.d/www.conf
+#RUN find /etc/php5/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
+RUN mkdir /usr/local/etc/conf.d/
 
-RUN sed -i \
-	-e "s/keepalive_timeout 65;/keepalive_timeout 2;\n\tclient_max_body_size 100m;/" \
-	/etc/nginx/nginx.conf &&\
-    echo "daemon off;" >> /etc/nginx/nginx.conf
+ADD nginx.conf /etc/nginx/sites-available/default
 
-RUN sed -i \
-	-e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" \
-	-e "s/upload_max_filesize = 2M/upload_max_filesize = 100M/" \
-	-e "s/post_max_size = 8M/post_max_size = 100M/" \
-	/etc/php/5.6/fpm/php.ini
+ADD run.sh /run.sh
+ADD fpm.sh /fpm.sh
+RUN chmod 755 /*.sh
 
-RUN sed -i \
-	-e "s/;daemonize = yes/daemonize = no/" \
-	/etc/php/5.6/fpm/php-fpm.conf
-
-RUN sed -i \
-	-e "s/;catch_workers_output = yes/catch_workers_output = yes/" \
-	/etc/php/5.6/fpm/pool.d/www.conf
-
-RUN chown -R www-data:www-data /var/www/html
-
-COPY config /config
-COPY nginx.conf /etc/nginx/sites-available/default
-COPY run.sh /run.sh
+COPY php-fpm.conf /etc/php5/fpm/php-fpm.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY config /config
+COPY sudoers /etc/sudoers
 
-RUN chmod 755 /*sh
-
-EXPOSE 80
+EXPOSE 22 80
 CMD ["/run.sh"]
