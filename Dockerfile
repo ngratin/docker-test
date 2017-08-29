@@ -52,9 +52,9 @@ RUN sed -i \
 	-e "s/;catch_workers_output = yes/catch_workers_output = yes/" \
 	/etc/php/5.6/fpm/pool.d/www.conf
 
+RUN chown -R www-data:www-data /var/www/html
 
 COPY config /config
-COPY fpm.sh /fpm.sh
 COPY nginx.conf /etc/nginx/sites-available/default
 COPY run.sh /run.sh
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
