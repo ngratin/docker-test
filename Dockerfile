@@ -46,13 +46,15 @@ RUN sed -i \
 
 RUN sed -i \
 	-e "s/;daemonize = yes/daemonize = no/" \
+	-e "s/\/run\/php\/php5.6-fpm.sock/\/var\/run\/php5-fpm.sock/" \
 	/etc/php/5.6/fpm/php-fpm.conf
+    echo "include=/usr/local/etc/conf.d/*" >> /etc/php/5.6/fpm/php-fpm.conf
 
 RUN sed -i \
 	-e "s/;catch_workers_output = yes/catch_workers_output = yes/" \
+	-e "s/;clear_env = no/clear_env = no/" \
 	/etc/php/5.6/fpm/pool.d/www.conf
 
-RUN mkdir /run/php
 RUN chown -R www-data:www-data /var/www/html
 
 COPY config /config
