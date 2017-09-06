@@ -55,6 +55,7 @@ RUN sed -i \
 	-e "s/;clear_env = no/clear_env = no/" \
 	/etc/php/5.6/fpm/pool.d/www.conf
 
+RUN mkdir /run/php
 RUN chown -R www-data:www-data /var/www/html
 
 COPY config /config
