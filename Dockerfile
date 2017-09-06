@@ -51,6 +51,7 @@ RUN sed -i \
 
 RUN sed -i \
 	-e "s/;catch_workers_output = yes/catch_workers_output = yes/" \
+	-e "s/\/run\/php\/php5.6-fpm.sock/\/var\/run\/php5-fpm.sock/" \
 	-e "s/;clear_env = no/clear_env = no/" \
 	/etc/php/5.6/fpm/pool.d/www.conf
 
