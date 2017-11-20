@@ -43,7 +43,7 @@ RUN gem install passenger --no-ri --no-rdoc
 RUN passenger-install-nginx-module
 RUN sed -i \
 	-e "s/root   html;/passenger_enabled on;/" \
-	-e "s/index  index.html index.htm;/root /srv/rails/app/public;/" \
+	-e "s/index  index.html index.htm;/root \/srv\/rails\/app\/public;/" \
 	/opt/nginx/conf/nginx.conf &&\
     echo "daemon off;" >> /opt/nginx/conf/nginx.conf
 RUN rm -fr /opt/nginx/logs
